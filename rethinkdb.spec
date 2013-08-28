@@ -20,6 +20,7 @@ BuildRequires:	npm
 BuildRequires:	openssl-devel
 BuildRequires:	protobuf-devel
 #BuildRequires:	python-pip
+BuildRequires:	sed >= 4.0
 BuildRequires:	v8-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -30,6 +31,8 @@ administration.
 
 %prep
 %setup -q
+
+%{__sed} -i -e '1s,^#!.*python,#!%{__python},' scripts/backup/*.py
 
 %build
 CXX="%{__cxx}"
@@ -60,6 +63,12 @@ rm -rf $RPM_BUILD_ROOT
 	STRIP_ON_INSTALL=0 \
 	DESTDIR=$RPM_BUILD_ROOT
 
+# omit the .py suffix, invoke tools directly without shell wrapper
+for a in $RPM_BUILD_ROOT%{_bindir}/rethinkdb-*.py; do
+	f=${a%.py}
+	mv -f $a $f
+done
+
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/%{name}/etc/bash_completion.d/rethinkdb.bash
 %{__rm} $RPM_BUILD_ROOT%{_docdir}/%{name}/copyright
 
@@ -76,13 +85,9 @@ install -d $RPM_BUILD_ROOT/var/lib/rethinkdb/instances.d
 %attr(754,root,root) /etc/rc.d/init.d/rethinkdb
 %attr(755,root,root) %{_bindir}/rethinkdb
 %attr(755,root,root) %{_bindir}/rethinkdb-dump
-%attr(755,root,root) %{_bindir}/rethinkdb-dump.py
 %attr(755,root,root) %{_bindir}/rethinkdb-export
-%attr(755,root,root) %{_bindir}/rethinkdb-export.py
 %attr(755,root,root) %{_bindir}/rethinkdb-import
-%attr(755,root,root) %{_bindir}/rethinkdb-import.py
 %attr(755,root,root) %{_bindir}/rethinkdb-restore
-%attr(755,root,root) %{_bindir}/rethinkdb-restore.py
 %{_mandir}/man1/rethinkdb.1*
 
 /etc/bash_completion.d/rethinkdb.bash
