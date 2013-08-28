@@ -9,17 +9,16 @@ Source0:	https://github.com/rethinkdb/rethinkdb/archive/v%{version}.tar.gz
 URL:		http://www.rethinkdb.com/
 BuildRequires:	bash
 BuildRequires:	boost-devel >= 1.40
-#BuildRequires:	ctags-etags
-BuildRequires:	curl
 BuildRequires:	git-core
-#BuildRequires:	gperftools-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	m4
 BuildRequires:	nodejs-devel
 BuildRequires:	npm
 BuildRequires:	openssl-devel
 BuildRequires:	protobuf-devel
-#BuildRequires:	python-pip
+BuildRequires:	python-PyYAML
+BuildRequires:	python-modules
+BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
 BuildRequires:	v8-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
